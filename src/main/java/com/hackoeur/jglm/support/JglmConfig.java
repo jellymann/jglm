@@ -64,15 +64,19 @@ public class JglmConfig {
 	}
 	
 	public static final boolean hasProperty(final String key) {
-		return PROPERTIES.getProperty(withNamespace(key)) != null;
+		return getProperty(key) != null;
 	}
 	
 	public static final String getProperty(final String key) {
-		return PROPERTIES.getProperty(withNamespace(key));
+		String namespaceKey = withNamespace(key);
+                String prop = System.getProperty(namespaceKey);
+                if (prop == null) prop = PROPERTIES.getProperty(namespaceKey);
+                return prop;
 	}
 	
 	public static final String getProperty(final String key, final String defaultIfNull) {
-		return PROPERTIES.getProperty(withNamespace(key), defaultIfNull);
+		String prop = getProperty(key);
+                return prop == null ? defaultIfNull : prop;
 	}
 	
 	public static final float getFloatProperty(final String key, final float defaultValue) {
@@ -86,7 +90,7 @@ public class JglmConfig {
 	}
 	
 	public static final <T> T getInstanceProperty(final String key, final Class<T> type) {
-		final String className = PROPERTIES.getProperty(withNamespace(key));
+		final String className = getProperty(key);
 		
 		Class<?> clazz = null;
 		
@@ -124,7 +128,7 @@ public class JglmConfig {
 		}
 	}
 	
-	private static final String withNamespace(final String key) {
+	private static String withNamespace(final String key) {
 		if (key.startsWith(CONFIG_NAMESPACE)) {
 			return key;
 		} else {
