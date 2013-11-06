@@ -23,6 +23,81 @@ import com.hackoeur.jglm.support.FastMath;
  * @author James Royalty
  */
 public final class Matrices {
+    
+    
+	public static final Mat4 translate
+	(
+		final Mat4 m,
+		final Vec3 v
+	)
+	{
+		//Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
+                Vec4 col3 = m.<Vec4>getColumn(0).scale(v.x).add(
+                        m.<Vec4>getColumn(1).scale(v.y)).add(
+                        m.<Vec4>getColumn(2).scale(v.z)).add(
+                        m.<Vec4>getColumn(3));
+                Mat4 Result = new Mat4(
+                        m.<Vec4>getColumn(0),
+                        m.<Vec4>getColumn(1),
+                        m.<Vec4>getColumn(2),col3);
+		return Result;
+	}
+        
+        public static final Mat4 rotate
+	(
+		final Mat4 m,
+		final float angle, 
+		final Vec3 v
+	)
+	{
+		float a = (float)FastMath.toRadians(angle);
+                
+		float c = (float)FastMath.cos(a);
+		float s = (float)FastMath.sin(a);
+
+		Vec3 axis = v.getUnitVector();
+
+		Vec3 temp = axis.scale(1f - c);
+
+		float
+                        rot00 = c + temp.x * axis.x,
+                        rot01 = 0 + temp.x * axis.y + s * axis.z,
+                        rot02 = 0 + temp.x * axis.z - s * axis.y,
+
+                        rot10 = 0 + temp.y * axis.x - s * axis.z,
+                        rot11 = c + temp.y * axis.y,
+                        rot12 = 0 + temp.y * axis.z + s * axis.x,
+
+                        rot20 = 0 + temp.z * axis.x + s * axis.y,
+                        rot21 = 0 + temp.z * axis.y - s * axis.x,
+                        rot22 = c + temp.z * axis.z;
+
+                Mat4 Result = new Mat4(
+                    m.<Vec4>getColumn(0) .scale( rot00 ) .add( m.<Vec4>getColumn(1) .scale( rot01 ) ) .add( m.<Vec4>getColumn(2) .scale( rot02 ) ),
+                    m.<Vec4>getColumn(0) .scale( rot10 ) .add( m.<Vec4>getColumn(1) .scale( rot11 ) ) .add( m.<Vec4>getColumn(2) .scale( rot12 ) ),
+                    m.<Vec4>getColumn(0) .scale( rot20 ) .add( m.<Vec4>getColumn(1) .scale( rot21 ) ) .add( m.<Vec4>getColumn(2) .scale( rot22 ) ),
+                    m.<Vec4>getColumn(3)
+                );
+		return Result;
+	}
+        
+        
+
+	public static final Mat4 scale
+	(
+		final Mat4 m,
+		final Vec3 v
+	)
+	{
+		Mat4 Result = new Mat4(
+                    m.<Vec4>getColumn(0).scale(v.x),
+                    m.<Vec4>getColumn(1).scale(v.y),
+                    m.<Vec4>getColumn(2).scale(v.z),
+                    m.<Vec4>getColumn(3)
+                );
+		return Result;
+	}
+    
 	/**
 	 * Creates a perspective projection matrix using field-of-view and 
 	 * aspect ratio to determine the left, right, top, bottom planes.  This
