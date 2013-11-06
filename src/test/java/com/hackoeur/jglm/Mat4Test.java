@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.Iterator;
 
 import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 
@@ -187,4 +188,29 @@ public class Mat4Test {
 		Mat4 m1T_T = m1T.transpose();
 		Assert.assertEquals(m1, m1T_T);
 	}
+        
+        @Test
+        public void testMultiply_Mat4()
+        {
+                Mat4 m = new Mat4(
+                    12, -23, 14, 8,
+                    22, 0, -1, 1,
+                    9, 18, 8, 0,
+                    19, -17, 3, 4
+                ).transpose();
+                Mat4 instance = new Mat4(
+                    45, 7, -32, 4,
+                    0, 23, 4, -4,
+                    1, -7, 18, 20,
+                    2, 2, 6, 0
+                ).transpose();
+                Mat4 expResult = new Mat4(
+                    482, -1679,   379,   383,
+                    466,   140,    -3,     7,
+                    400,   -39,   225,    81,
+                    122,    62,    74,    18
+                ).transpose();
+                Mat4 result = instance.multiply(m);
+                assertEquals(expResult, result);
+        }
 }
