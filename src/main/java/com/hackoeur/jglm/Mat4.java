@@ -395,6 +395,47 @@ public final class Mat4 extends AbstractMat {
 				m03, m13, m23, m33
 		);
 	}
+	
+	public Mat4 scale(float scaleX, float scaleY, float scaleZ) {
+		return multiply(new Mat4(scaleX, 0, 0, 0,
+				0, scaleY, 0, 0,
+				0, 0, scaleZ, 0, 
+				0, 0, 0, 1));
+	}
+	  
+	public Mat4 scale(float s) {
+		return scale(s, s, s);
+	}
+	
+	public Mat4 rotateX(float angle) {
+		float sin = (float)Math.sin(angle);
+		float cos = (float)Math.cos(angle);
+
+		return multiply(new Mat4(1, 0, 0, 0,
+				0, cos, sin, 0,
+				0, -sin, cos, 0,
+				0, 0, 0, 1));
+	}
+
+	public Mat4 rotateY(float angle) {
+		float sin = (float)Math.sin(angle);
+		float cos = (float)Math.cos(angle);
+
+		return multiply(new Mat4(cos, 0, -sin, 0,
+				0, 1, 0, 0,
+				sin, 0, cos, 0,
+				0, 0, 0, 1));
+	}
+
+	public Mat4 rotateZ(float angle) {
+		float sin = (float)Math.sin(angle);
+		float cos = (float)Math.cos(angle);
+
+		return multiply(new Mat4(cos, sin, 0, 0,
+				-sin, cos, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1));
+	}
 
 	@Override
 	public int hashCode() {
