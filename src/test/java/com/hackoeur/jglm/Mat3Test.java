@@ -257,4 +257,22 @@ public class Mat3Test {
 		
 		JglmTesting.assertFloatsEqualDefaultTol(6f, m1.determinant());
 	}
+	
+	@Test
+	public void testMat4ToMat3() {
+		Mat4 m4 = new Mat4(
+				1f, 2f, 3f, 4f,
+				5f, 6f, 7f, 8f,
+				9f, 10f, 11f, 12f,
+				13f, 14f, 15f, 16f
+		);
+		
+		Mat3 m3 = new Mat3(m4);
+		
+		Mat3 expected = new Mat3(1f, 2f, 3f,
+								 5f, 6f, 7f,
+								 9f, 10f, 11f);
+		
+		Assert.assertEquals(expected, m3);
+	}
 }

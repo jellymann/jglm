@@ -189,28 +189,74 @@ public class Mat4Test {
 		Assert.assertEquals(m1, m1T_T);
 	}
         
-        @Test
-        public void testMultiply_Mat4()
-        {
-                Mat4 m = new Mat4(
-                    12, -23, 14, 8,
-                    22, 0, -1, 1,
-                    9, 18, 8, 0,
-                    19, -17, 3, 4
-                ).transpose();
-                Mat4 instance = new Mat4(
-                    45, 7, -32, 4,
-                    0, 23, 4, -4,
-                    1, -7, 18, 20,
-                    2, 2, 6, 0
-                ).transpose();
-                Mat4 expResult = new Mat4(
-                    482, -1679,   379,   383,
-                    466,   140,    -3,     7,
-                    400,   -39,   225,    81,
-                    122,    62,    74,    18
-                ).transpose();
-                Mat4 result = instance.multiply(m);
-                assertEquals(expResult, result);
-        }
+	@Test
+	public void testMultiply_Mat4()
+	{
+		Mat4 m = new Mat4(
+				12, -23, 14, 8,
+				22, 0, -1, 1,
+				9, 18, 8, 0,
+				19, -17, 3, 4
+				).transpose();
+		Mat4 instance = new Mat4(
+				45, 7, -32, 4,
+				0, 23, 4, -4,
+				1, -7, 18, 20,
+				2, 2, 6, 0
+				).transpose();
+		Mat4 expResult = new Mat4(
+				482, -1679,   379,   383,
+				466,   140,    -3,     7,
+				400,   -39,   225,    81,
+				122,    62,    74,    18
+				).transpose();
+		Mat4 result = instance.multiply(m);
+		assertEquals(expResult, result);
+	}
+	
+	@Test
+	public void testScale(){
+		Mat4 m1 = Mat4.MAT4_IDENTITY;
+		m1 = m1.scale(2f);
+
+		Mat4 expected = new Mat4(2f, 0f, 0f, 0f,
+				0f, 2f, 0f, 0f,
+				0f, 0f, 2f, 0f,
+				0f, 0f, 0f, 1f);
+
+		Assert.assertEquals(expected, m1);
+	}
+
+	@Test
+	public void testRotate(){
+		Mat4 m1 = Mat4.MAT4_IDENTITY;
+		m1 = m1.rotateX(90f);
+
+		Mat4 expected = new Mat4(1f, 0f, 0f, 0f,
+				0f, -0.4480736161291702f, 0.8939966636005579f, 0f,
+				0f, -0.8939966636005579f, -0.4480736161291702f, 0f,
+				0f, 0f, 0f, 1f);
+
+		Assert.assertEquals(expected, m1);
+
+		m1 = Mat4.MAT4_IDENTITY;
+		m1 = m1.rotateY(90f);
+
+		expected = new Mat4(-0.4480736161291702f, 0f, -0.8939966636005579f, 0f,
+				0f, 1f, 0f, 0f,
+				0.8939966636005579f, 0f, -0.4480736161291702f, 0f,
+				0f, 0f, 0f, 1f);
+
+		Assert.assertEquals(expected, m1);
+
+		m1 = Mat4.MAT4_IDENTITY;
+		m1 = m1.rotateZ(90f);
+
+		expected = new Mat4(-0.4480736161291702f, 0.8939966636005579f, 0f, 0f,
+				-0.8939966636005579f, -0.4480736161291702f, 0f, 0f,
+				0f, 0f, 1f, 0f,
+				0f, 0f, 0f, 1f);
+
+		Assert.assertEquals(expected, m1);
+	}
 }
