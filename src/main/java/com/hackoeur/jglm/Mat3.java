@@ -219,6 +219,26 @@ public final class Mat3 extends AbstractMat {
 		this.m22 = mat.m22;
 	}
 	
+	/**
+	 * Creates a 3x3 matrix from a 4x4 matrix by taking the upper left part.
+	 * This is commonly used for normal matrices for example.
+	 * 
+	 * @param mat4 Mat4 matrix
+	 */
+	public Mat3(final Mat4 mat4){
+		this.m00 = mat4.m00;
+		this.m01 = mat4.m01;
+		this.m02 = mat4.m02;
+		
+		this.m10 = mat4.m10;
+		this.m11 = mat4.m11;
+		this.m12 = mat4.m12;
+		
+		this.m20 = mat4.m20;
+		this.m21 = mat4.m21;
+		this.m22 = mat4.m22;
+	}
+	
 	@Override
 	public int getNumRows() {
 		return 3;
