@@ -34,10 +34,14 @@ public final class Compare {
 	/** Relative epsilon for matrices. */
 	public static final float MAT_EPSILON;
 	
+	/** Relative epsilon for quaternions. */
+	public static final float QUAT_EPSILON;
+	
 	static {
 		ABS_EPSILON = JglmConfig.getFloatProperty("absEpsilon", 1.192092896e-07f);
 		VEC_EPSILON = JglmConfig.getFloatProperty("vecRelEpsilon", 0.00001f);
 		MAT_EPSILON = JglmConfig.getFloatProperty("matRelEpsilon", 0.00001f);
+		QUAT_EPSILON = JglmConfig.getFloatProperty("quatRelEpsilon", 0.00001f);
 	}
 	
 	
