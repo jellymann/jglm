@@ -61,6 +61,14 @@ public final class Vec3 extends AbstractVec {
 		
 		return new Vec3(x * invLength, y * invLength, z * invLength);
 	}
+        
+        public Vec3 getNormalizedTo(float len)
+        {
+                final float invLength = FastMath.invSqrtFast(getLengthSquared());
+                
+                return new Vec3(x * len * invLength, y * len * invLength,
+                        z * len * invLength);
+        }
 	
 	public Vec3 getNegated() {
 		return new Vec3(-x, -y, -z);

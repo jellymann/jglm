@@ -31,15 +31,74 @@ public class Quaternion
     public static float QUAT_DELTA = 0.001f;
 
     private final float w, x, y, z;
+    
+    /**
+     * Creates a Quaternion from a axis and a angle.
+     * 
+     * @param axis
+     *            axis vector (will be normalized)
+     * @param angle
+     *            angle in radians.
+     * 
+     * @return new quaternion
+     */
+    public static Quaternion createFromAxisAngle(Vec3 axis, float angle) {
+        angle *= 0.5;
+        float sin = (float) sin(angle);
+        float cos = (float) cos(angle);
+        Quaternion q = new Quaternion(cos, axis.getNormalizedTo(sin));
+        return q;
+    }
+    
+    /**
+     * Creates a Quaternion from Euler angles.
+     * 
+     * @param pitch
+     *            X-angle in radians.
+     * @param yaw
+     *            Y-angle in radians.
+     * @param roll
+     *            Z-angle in radians.
+     * 
+     * @return new quaternion
+     */
+    public static Quaternion createFromEuler(float pitch, float yaw, float roll) {
+        pitch *= 0.5;
+        yaw *= 0.5;
+        roll *= 0.5;
+        double sinPitch = sin(pitch);
+        double cosPitch = cos(pitch);
+        double sinYaw = sin(yaw);
+        double cosYaw = cos(yaw);
+        double sinRoll = sin(roll);
+        double cosRoll = cos(roll);
+        double cosPitchCosYaw = cosPitch * cosYaw;
+        double sinPitchSinYaw = sinPitch * sinYaw;
+
+        return new Quaternion(
+                (float) (cosRoll * cosPitchCosYaw + sinRoll * sinPitchSinYaw),
+                (float) (sinRoll * cosPitchCosYaw - cosRoll * sinPitchSinYaw),
+                (float) (cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw),
+                (float) (cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw)
+        );
+    }
 
     // create a new object with the given components
-    public Quaternion(float x0, float x1, float x2, float x3)
+    public Quaternion(float w, float x, float y, float z)
     {
-        this.w = x0;
-        this.x = x1;
-        this.y = x2;
-        this.z = x3;
+        this.w = w;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
+
+    public Quaternion(float w, Vec3 v) {
+        this.x = v.getX();
+        this.y = v.getY();
+        this.z = v.getZ();
+        this.w = w;
+    }
+
 
     // return a string representation of the invoking object
     @Override
@@ -78,7 +137,7 @@ public class Quaternion
         return new Quaternion(y0, y1, y2, y3);
     }
 
-    public Quaternion multiply(float s)
+    public Quaternion scale(float s)
     {
         return new Quaternion(w * s, x * s, y * s, z * s);
     }
