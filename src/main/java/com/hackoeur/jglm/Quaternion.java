@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.hackoeur.jglm;
 
 import com.hackoeur.jglm.support.Compare;
 import com.hackoeur.jglm.support.FastMath;
 import com.hackoeur.jglm.support.Precision;
+import static com.hackoeur.jglm.support.FastMath.*;
 
 /**
  *
@@ -26,59 +26,74 @@ import com.hackoeur.jglm.support.Precision;
  */
 public class Quaternion
 {
-    private final float x0, x1, x2, x3; 
+
+    public static Quaternion QUAT_IDENT = new Quaternion(1, 0, 0, 0);
+    public static float QUAT_DELTA = 0.001f;
+
+    private final float w, x, y, z;
 
     // create a new object with the given components
-    public Quaternion(float x0, float x1, float x2, float x3) {
-        this.x0 = x0;
-        this.x1 = x1;
-        this.x2 = x2;
-        this.x3 = x3;
+    public Quaternion(float x0, float x1, float x2, float x3)
+    {
+        this.w = x0;
+        this.x = x1;
+        this.y = x2;
+        this.z = x3;
     }
 
     // return a string representation of the invoking object
     @Override
-    public String toString() {
-        return x0 + " + " + x1 + "i + " + x2 + "j + " + x3 + "k";
+    public String toString()
+    {
+        return w + " + " + x + "i + " + y + "j + " + z + "k";
     }
 
     // return the quaternion norm
-    public float norm() {
-        return (float) FastMath.sqrt(x0*x0 + x1*x1 +x2*x2 + x3*x3);
+    public float norm()
+    {
+        return (float) FastMath.sqrt(w * w + x * x + y * y + z * z);
     }
 
     // return the quaternion conjugate
-    public Quaternion conjugate() {
-        return new Quaternion(x0, -x1, -x2, -x3);
+    public Quaternion conjugate()
+    {
+        return new Quaternion(w, -x, -y, -z);
     }
 
     // return a new Quaternion whose value is (this + b)
-    public Quaternion add(Quaternion b) {
+    public Quaternion add(Quaternion b)
+    {
         Quaternion a = this;
-        return new Quaternion(a.x0+b.x0, a.x1+b.x1, a.x2+b.x2, a.x3+b.x3);
+        return new Quaternion(a.w + b.w, a.x + b.x, a.y + b.y, a.z + b.z);
     }
 
-
     // return a new Quaternion whose value is (this * b)
-    public Quaternion multiply(Quaternion b) {
+    public Quaternion multiply(Quaternion b)
+    {
         Quaternion a = this;
-        float y0 = a.x0*b.x0 - a.x1*b.x1 - a.x2*b.x2 - a.x3*b.x3;
-        float y1 = a.x0*b.x1 + a.x1*b.x0 + a.x2*b.x3 - a.x3*b.x2;
-        float y2 = a.x0*b.x2 - a.x1*b.x3 + a.x2*b.x0 + a.x3*b.x1;
-        float y3 = a.x0*b.x3 + a.x1*b.x2 - a.x2*b.x1 + a.x3*b.x0;
+        float y0 = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
+        float y1 = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
+        float y2 = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
+        float y3 = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
         return new Quaternion(y0, y1, y2, y3);
     }
 
-    // return a new Quaternion whose value is the inverse of this
-    public Quaternion inverse() {
-        float d = x0*x0 + x1*x1 + x2*x2 + x3*x3;
-        return new Quaternion(x0/d, -x1/d, -x2/d, -x3/d);
+    public Quaternion multiply(float s)
+    {
+        return new Quaternion(w * s, x * s, y * s, z * s);
     }
 
+    // return a new Quaternion whose value is the inverse of this
+    public Quaternion inverse()
+    {
+        float d = w * w + x * x + y * y + z * z;
+        return new Quaternion(w / d, -x / d, -y / d, -z / d);
+    }
 
     // return a / b
-    public Quaternion divide(Quaternion b) {
-         Quaternion a = this;
+    public Quaternion divide(Quaternion b)
+    {
+        Quaternion a = this;
         return a.inverse().multiply(b);
     }
 
@@ -87,24 +102,24 @@ public class Quaternion
     {
         if (obj instanceof Quaternion)
         {
-            Quaternion b = (Quaternion)obj;
-            return Precision.equals(x0, b.x0, Compare.QUAT_EPSILON)
-                    && Compare.equals(x1, b.x1, Compare.QUAT_EPSILON)
-                    && Compare.equals(x2, b.x2, Compare.QUAT_EPSILON)
-                    && Compare.equals(x3, b.x3, Compare.QUAT_EPSILON);
+            Quaternion b = (Quaternion) obj;
+            return Precision.equals(w, b.w, Compare.QUAT_EPSILON)
+                    && Compare.equals(x, b.x, Compare.QUAT_EPSILON)
+                    && Compare.equals(y, b.y, Compare.QUAT_EPSILON)
+                    && Compare.equals(z, b.z, Compare.QUAT_EPSILON);
         }
         return false;
     }
-    
+
     public boolean equalsWithEpsilon(Object obj, float eps)
     {
         if (obj instanceof Quaternion)
         {
-            Quaternion b = (Quaternion)obj;
-            return Precision.equals(x0, b.x0, eps)
-                    && Compare.equals(x1, b.x1, eps)
-                    && Compare.equals(x2, b.x2, eps)
-                    && Compare.equals(x3, b.x3, eps);
+            Quaternion b = (Quaternion) obj;
+            return Precision.equals(w, b.w, eps)
+                    && Compare.equals(x, b.x, eps)
+                    && Compare.equals(y, b.y, eps)
+                    && Compare.equals(z, b.z, eps);
         }
         return false;
     }
@@ -113,38 +128,87 @@ public class Quaternion
     public int hashCode()
     {
         int hash = 5;
-        hash = 29 * hash + (int) (Double.doubleToLongBits(this.x0) ^ (Double.doubleToLongBits(this.x0) >>> 32));
-        hash = 29 * hash + (int) (Double.doubleToLongBits(this.x1) ^ (Double.doubleToLongBits(this.x1) >>> 32));
-        hash = 29 * hash + (int) (Double.doubleToLongBits(this.x2) ^ (Double.doubleToLongBits(this.x2) >>> 32));
-        hash = 29 * hash + (int) (Double.doubleToLongBits(this.x3) ^ (Double.doubleToLongBits(this.x3) >>> 32));
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.w) ^ (Double.doubleToLongBits(this.w) >>> 32));
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.y) ^ (Double.doubleToLongBits(this.y) >>> 32));
+        hash = 29 * hash + (int) (Double.doubleToLongBits(this.z) ^ (Double.doubleToLongBits(this.z) >>> 32));
         return hash;
     }
-    
+
     public Mat4 toMat4()
     {
         // Converts this quaternion to a rotation matrix.
         //
-        // | 1 - 2(y^2 + z^2) 2(xy + wz) 2(xz - wy) 0 |
-        // | 2(xy - wz) 1 - 2(x^2 + z^2) 2(yz + wx) 0 |
-        // | 2(xz + wy) 2(yz - wx) 1 - 2(x^2 + y^2) 0 |
-        // | 0 0 0 1 |
+        // | 1 - 2(y^2 + z^2) 2(xy + wz)       2(xz - wy)       0 |
+        // | 2(xy - wz)       1 - 2(x^2 + z^2) 2(yz + wx)       0 |
+        // | 2(xz + wy)       2(yz - wx)       1 - 2(x^2 + y^2) 0 |
+        // | 0                0                0                1 |
 
-        float x =  x1 + x1;
-        float y =  x  + x;
-        float z =  x3 + x3;
-        float xx = x1 * x;
-        float xy = x1 * y;
-        float xz = x1 * z;
-        float yy = x  * y;
-        float yz = x  * z;
-        float zz = x3 * z;
-        float wx = x0 * x;
-        float wy = x0 * y;
-        float wz = x0 * z;
+        float x2 =  x + x;
+        float y2 =  y + y;
+        float z2 =  z + z;
+        float xx =  x * x2;
+        float xy =  x * y2;
+        float xz =  x * z2;
+        float yy =  y * y2;
+        float yz =  y * z2;
+        float zz =  z * z2;
+        float wx =  w * x2;
+        float wy =  w * y2;
+        float wz =  w * z2;
 
-        return new Mat4(1 - (yy + zz), xy - wz, xz + wy, 0, xy + wz,
-                1 - (xx + zz), yz - wx, 0, xz - wy, yz + wx, 1 - (xx + yy), 0,
-                0, 0, 0, 1).transpose();
+        return new Mat4(
+                1 - (yy + zz), xy - wz,       xz + wy,       0,
+                xy + wz,       1 - (xx + zz), yz - wx,       0,
+                xz - wy,       yz + wx,       1 - (xx + yy), 0,
+                0,             0,             0,             1
+        ).transpose();
     }
-    
+
+    public Quaternion slerp(Quaternion to, float t)
+    {
+        float[] to1 = new float[4];
+        double omega, cosom, sinom, scale0, scale1;
+        // calc cosine
+        cosom = x * to.x + y * to.y + z * to.z
+                + w * to.w;
+        // adjust signs (if necessary)
+        if (cosom < 0.0)
+        {
+            cosom = -cosom;
+            to1[0] = -to.x;
+            to1[1] = -to.y;
+            to1[2] = -to.z;
+            to1[3] = -to.w;
+        } else
+        {
+            to1[0] = to.x;
+            to1[1] = to.y;
+            to1[2] = to.z;
+            to1[3] = to.w;
+        }
+        // calculate coefficients
+        if ((1.0 - cosom) > QUAT_DELTA)
+        {
+            // standard case (slerp)
+            omega = acos(cosom);
+            sinom = sin(omega);
+            scale0 = sin((1.0 - t) * omega) / sinom;
+            scale1 = sin(t * omega) / sinom;
+        } else
+        {
+        // "from" and "to" quaternions are very close 
+            //  ... so we can do a linear interpolation
+            scale0 = 1.0 - t;
+            scale1 = t;
+        }
+        // calculate final values
+        return new Quaternion(
+                (float) (scale0 * w + scale1 * to1[3]),
+                (float) (scale0 * x + scale1 * to1[0]),
+                (float) (scale0 * y + scale1 * to1[1]),
+                (float) (scale0 * z + scale1 * to1[2])
+        );
+    }
+
 }
