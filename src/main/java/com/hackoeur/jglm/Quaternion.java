@@ -99,6 +99,31 @@ public class Quaternion
         this.w = w;
     }
 
+    /**
+     * Gets the rotation angle.
+     * 
+     * @return vector containing the rotation axis.
+     */
+    public Vec3 getAxis() {
+        float sa = sqrtFast(1.0f - w * w);
+        if (sa < Compare.QUAT_EPSILON) {
+            sa = 1.0f;
+        } else {
+            sa = 1.0f / sa;
+        }
+        return new Vec3(x * sa, y * sa, z * sa);
+    }
+    
+    /**
+     * Gets the rotation angle.
+     * 
+     * @return the rotation angle.
+     */
+    public float getAngle()
+    {
+        return (float) acos(w) * 2.0f;
+    }
+
 
     // return a string representation of the invoking object
     @Override
