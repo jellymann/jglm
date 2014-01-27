@@ -323,6 +323,11 @@ public final class Mat4 extends AbstractMat {
 		
 		return buffer;
 	}
+        
+        public Vec3 getTranslate()
+        {
+            return new Vec3(m30, m31, m32);
+        }
 	
 	@Override
 	public boolean isIdentity() {
@@ -564,24 +569,24 @@ public final class Mat4 extends AbstractMat {
         }
         
         
-        /**
-         * Simple but not robust matrix inversion.
-         * (Doesn't work properly if there is a scaling or skewing transformation.)
-         * @return the inverse of this matrix.
-         */
-	public Mat4 getInverseSimple()
-	{
-            return new Mat4(
-                m00, m10, m20, 0,
-                m10, m11, m21, 0,
-                m02, m12, m22, 0,
-                -(m30*m00) - (m31*m01) - (m32*m02),
-                -(m30*m10) - (m31*m11) - (m32*m12),
-                -(m30*m20) - (m31*m21) - (m32*m22),
-                1.0f
-            );
-	}
-	
+//        /**
+//         * Simple but not robust matrix inversion.
+//         * (Doesn't work properly if there is a scaling or skewing transformation.)
+//         * @return the inverse of this matrix.
+//         */
+//	public Mat4 getInverseSimple()
+//	{
+//            return new Mat4(
+//                m00, m10, m20, 0,
+//                m10, m11, m21, 0,
+//                m02, m12, m22, 0,
+//                -(m30*m00) - (m31*m01) - (m32*m02),
+//                -(m30*m10) - (m31*m11) - (m32*m12),
+//                -(m30*m20) - (m31*m21) - (m32*m22),
+//                1.0f
+//            );
+//	}
+//	
 	/** 
          * Invert for only a rotation, any translation is zeroed out
          * @return the inverse of this matrix.
@@ -730,4 +735,18 @@ public final class Mat4 extends AbstractMat {
 
             return new Mat4(inv);
         }
+        
+        /**
+         * Return vector v rotated by the 3x3 portion of this matrix.
+	 * (provided because it's used by BBox)
+         * @param v the vector to rotate.
+         * @return the rotated vector.
+         */
+	public Vec3 rotateVector(Vec3 v)
+	{
+            return new Vec3( 
+		v.getX()*m00 + v.getY()*m10 + v.getZ()*m20,
+		v.getX()*m01 + v.getY()*m11 + v.getZ()*m21,
+		v.getX()*m02 + v.getY()*m12 + v.getZ()*m22 );
+ 	}
 }

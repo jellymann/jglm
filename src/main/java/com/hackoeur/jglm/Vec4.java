@@ -117,6 +117,18 @@ public final class Vec4 extends AbstractVec {
         {
             return new Vec3(x,y,z);
         }
+        
+        public float get(int i)
+        {
+            switch (i)
+            {
+                case 0: return x;
+                case 1: return y;
+                case 2: return z;
+                case 3: return w;
+                default: return Float.NaN;
+            }
+        }
 	
 	@Override
 	public FloatBuffer getBuffer() {

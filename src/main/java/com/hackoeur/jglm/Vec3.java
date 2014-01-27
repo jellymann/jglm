@@ -93,6 +93,11 @@ public final class Vec3 extends AbstractVec {
 	public Vec3 multiply(final float scalar) {
 		return new Vec3( x * scalar, y * scalar, z * scalar );
 	}
+        
+        public Vec3 multiply(final Vec3 v)
+        {
+            return new Vec3(x*v.x, y*v.y, z*v.z);
+        }
 	
 	public Vec3 scale(final float scalar) {
 		return multiply(scalar);
@@ -160,6 +165,17 @@ public final class Vec3 extends AbstractVec {
 	public float getZ() {
 		return z;
 	}
+        
+        public float get(int i)
+        {
+            switch (i)
+            {
+                case 0: return x;
+                case 1: return y;
+                case 2: return z;
+                default: return Float.NaN;
+            }
+        }
 	
 	@Override
 	public int hashCode() {
